@@ -1,1 +1,1 @@
-Chunker Module
+Vector store
