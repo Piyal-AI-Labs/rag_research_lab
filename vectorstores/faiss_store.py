@@ -22,7 +22,8 @@ class FAISSStore:
     ):
         
         vectors = np.array(embeddings, dtype="float32")
-
+        self.index.add(vectors)
+        
         self.documents.extend(documents)
 
 
