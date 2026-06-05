@@ -1,0 +1,11 @@
+llm:
+  provider: openai
+  model: gpt-4o-mini
+  temperature: 0.0
+
+embeddings:
+  provider: sentence_transformer
+  model: BAAI/bge-small-en-v1.5
+
+experiment:
+  name: rag_demo
