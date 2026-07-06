@@ -7,11 +7,15 @@ from genai_core.llms.factory import LLMFactory
 from genai_core.prompts.manager import PromptManager
 
 # RAG Research Lab
-from ..chunkers.fixed_chunker import FixedChunker
-from .vectorstores.faiss_store import FAISSStore
-from .retrievers.vector_retriever import VectorRetriever
-from .pipelines.basic_rag_pipeline import BasicRAGPipeline
+from chunkers.fixed_chunker import FixedChunker
+from vectorstores.faiss_store import FAISSStore
+from retrievers.vector_retriever import VectorRetriever
+from pipelines.basic_rag_pipeline import BasicRAGPipeline
 
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 # Load Config
 config = ConfigLoader.load(
@@ -21,7 +25,8 @@ config = ConfigLoader.load(
 # Load models
 llm = LLMFactory.create(
     provider=config.llm.provider,
-    model=config.llm.model
+    model=config.llm.model,
+    api_key=os.environ.get('OPENAI_API_KEY')
 )
 
 embedding_model = EmbeddingFactory.create(
@@ -30,8 +35,8 @@ embedding_model = EmbeddingFactory.create(
 )
 
 # Load document
-document = Path(
-    "data/sample.text"
+document = (
+    Path(config.paths.datasets) / "sample.txt"
 ).read_text(
     encoding="utf-8"
 )
@@ -51,7 +56,7 @@ print(
 )
 
 # create embeddings
-embeddings = embedding_model.embed_documents(chunks)
+embeddings = embedding_model.embed_document(chunks)
 
 # build vector store
 vector_store = FAISSStore(
@@ -70,7 +75,7 @@ retriever = VectorRetriever(
 )
 
 # Prompt manager
-prompt_manager = PromptManager(template_dir="templates")
+prompt_manager = PromptManager(template_dir=config.paths.prompt_templates)
 
 # RAG Pipeline
 pipeline = BasicRAGPipeline(

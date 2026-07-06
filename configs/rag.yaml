@@ -2,10 +2,34 @@ llm:
   provider: openai
   model: gpt-4o-mini
   temperature: 0.0
+  max_tokens: 1000
 
 embeddings:
   provider: sentence_transformer
   model: BAAI/bge-small-en-v1.5
 
+chunking:
+  strategy: fixed
+  chunk_size: 512
+  chunk_overlap: 50
+
+retriever:
+  top_k: 5
+
 experiment:
-  name: rag_demo
+  name: chunk_size_baseline
+  output_dir: outputs
+  seed: 42
+
+evaluation:
+  bleu: true
+  rouge: true
+  bertscore: true
+  ragas: false
+
+paths:
+  prompt_templates: templates
+  datasets: data
+  outputs: outputs
+  logs: logs
+  reports: reports
